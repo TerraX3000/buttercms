@@ -1,0 +1,76 @@
+{% macro navbar(menu) %}
+<div class="w3-bar w3-black">
+    {% for menu_item in menu['menu_items'] %}
+    <a href="{{ menu_item['url'] }}" class="w3-bar-item w3-button w3-mobile">{{ menu_item['label'] }}</a>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro _dropdown(sub_menu, flag) %}
+<div class="w3-dropdown-click">
+    {% set id = sub_menu['meta']['id'] %}
+    <button class="w3-button" onclick="myFunction('{{ id }}')">
+        {{ sub_menu['name'] }} <i class="fa fa-caret-down"></i>
+    </button>
+    <div id="{{ id }}" class="w3-dropdown-content w3-bar-block w3-card">
+        {% for menu_item in sub_menu['menu_items'] %}
+        <a href="{{ menu_item['url'] }}" class="w3-bar-item w3-button">{{ menu_item['label'] }}</a>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro page_navbar(page_menu, roles) %}
+<div class="w3-bar w3-light-grey">
+    {% for menu_item in page_menu['menu_items'] %}
+    {% if menu_item['group'] in roles %}
+    {% if not menu_item['sub_menus'] and not menu_item['menu_items'] %}
+    <a class="w3-bar-item w3-button" href="{{ menu_item['url'] }}">{{
+        menu_item['label'] }}</a>
+    {% else %}
+    <div class="w3-dropdown-click">
+        {% set id = menu_item['meta']['id'] %}
+        <button class="w3-button" onclick="myFunction('{{ id }}')">
+            {{ menu_item['label'] }} <i class="fa fa-caret-down"></i>
+        </button>
+        <div id="{{ id }}" class="w3-dropdown-content w3-bar-block w3-card">
+            {% for sub_menu_item in menu_item['menu_items'] %}
+            <a class="w3-bar-item w3-button" href="{{ sub_menu_item['url'] }}">{{
+                sub_menu_item['label'] }}</a>
+            {% endfor %}
+            {% for sub_menu in menu_item['sub_menus'] %}
+            {{ _dropdown(sub_menu) }}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+    function myFunction(div_id) {
+        var x = document.getElementById(div_id);
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+</script>
+{% endmacro %}
+
+{% macro example_page_navbar(menu) %}
+<div class="w3-bar w3-light-grey">
+    <a href="#" class="w3-bar-item w3-button">Home</a>
+    <a href="#" class="w3-bar-item w3-button">Link 1</a>
+    <div class="w3-dropdown-hover">
+        <button class="w3-button">Dropdown</button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+            <a href="#" class="w3-bar-item w3-button">Link 1</a>
+            <a href="#" class="w3-bar-item w3-button">Link 2</a>
+            <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        </div>
+    </div>
+</div>
+{% endmacro %}

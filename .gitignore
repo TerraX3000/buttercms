@@ -1,0 +1,5 @@
+.vscode
+env.py
+__pycache__
+flask_mail_venv
+webapptest_credentials.json
